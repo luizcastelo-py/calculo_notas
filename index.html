@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Notas</title>
 
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 15px;
+}
+
+.container {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+select, input, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+h3 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+button {
+    background-color: #4e73df;
+    color: white;
+    font-weight: bold;
+    border: none;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #2e59d9;
+}
+
+.resultado {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Ajustes extras para telas maiores */
+@media (min-width: 768px) {
+    .container {
+        padding: 35px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>📚 Calculadora de Notas</h1>
+
+<select id="forma">
+<option value="1">Notas de cada avaliação</option>
+<option value="2">Notas dos boletins bimestrais</option>
+</select>
+
+<select id="materia">
+<option>História</option>
+<option>Geografia</option>
+<option>Matemática</option>
+<option>Biologia</option>
+<option>Física</option>
+<option>Química</option>
+<option>Filosofia</option>
+<option>Sociologia</option>
+<option>Inglês</option>
+<option>Espanhol</option>
+<option>Português</option>
+</select>
+
+<div id="inputs"></div>
+
+<button onclick="calcular()">Calcular</button>
+
+<div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+function criarInputs() {
+    const forma = document.getElementById("forma").value;
+    const div = document.getElementById("inputs");
+    div.innerHTML = "";
+
+    if (forma == "1") {
+        for (let i = 1; i <= 3; i++) {
+            div.innerHTML += `
+                <h3>${i}º Bimestre</h3>
+                <input type="number" placeholder="Discursiva" id="d${i}">
+                <input type="number" placeholder="Objetiva" id="o${i}">
+                <input type="number" placeholder="Formativa" id="f${i}">
+            `;
+        }
+    } else {
+        for (let i = 1; i <= 3; i++) {
+            div.innerHTML += `
+                <input type="number" placeholder="Nota do ${i}º Bimestre" id="b${i}">
+            `;
+        }
+    }
+}
+
+function calcular() {
+    const forma = document.getElementById("forma").value;
+    const materia = document.getElementById("materia").value;
+    let total = 0;
+
+    if (forma == "1") {
+        for (let i = 1; i <= 3; i++) {
+            let d = parseFloat(document.getElementById("d"+i).value) || 0;
+            let o = parseFloat(document.getElementById("o"+i).value) || 0;
+            let f = parseFloat(document.getElementById("f"+i).value) || 0;
+
+            total += (d * 0.5) + (o * 0.3) + (f * 0.2);
+        }
+    } else {
+        for (let i = 1; i <= 3; i++) {
+            let b = parseFloat(document.getElementById("b"+i).value) || 0;
+            total += b;
+        }
+    }
+
+    let notaNecessaria = 24 - total;
+    const resultado = document.getElementById("resultado");
+
+    if (notaNecessaria <= 0) {
+        resultado.innerHTML = "🎉 Parabéns! Você já passou em " + materia;
+    } else {
+        resultado.innerHTML =
+            "Você precisa tirar " + notaNecessaria.toFixed(2) +
+            " no 4º bimestre em " + materia;
+    }
+}
+
+document.getElementById("forma").addEventListener("change", criarInputs);
+criarInputs();
+</script>
+
+</body>
+</html>
